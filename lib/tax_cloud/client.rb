@@ -14,6 +14,7 @@ module TaxCloud #:nodoc:
     # [body] Body content.
     def call(method, message = {})
       safe do
+        Rails.logger.info "SOAP call: method #{method} message #{message}"
         super method, message: message.merge(auth_params)
       end
     end
@@ -43,6 +44,8 @@ module TaxCloud #:nodoc:
     def safe(&block)
       yield
     rescue Savon::SOAPFault => e
+      Rails.logger.error "SOAP exception: #{e.inspect}"
+      Rails.logger.error e.backtrace.join("\n")
       raise TaxCloud::Errors::SoapError.new(e)
     end
   end
