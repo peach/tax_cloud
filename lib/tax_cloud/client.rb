@@ -14,7 +14,7 @@ module TaxCloud #:nodoc:
     # [body] Body content.
     def call(method, message = {})
       safe do
-        Rails.logger.info "SOAP call: method #{method} message #{message}"
+        Rails.logger.info "SOAP call: method #{method} message #{message.merge(auth_params)}"
         super method, message: message.merge(auth_params)
       end
     end
